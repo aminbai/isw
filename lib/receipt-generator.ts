@@ -1,8 +1,5 @@
-// Enhanced receipt generator with jsPDF for beautiful PDF generation
+// Enhanced receipt generator with beautiful color theory and UI design
 export function generateReceipt(donationData: any) {
-  // For demo purposes, we'll create a beautiful HTML-based receipt that can be printed as PDF
-  // In production, you would install jsPDF: npm install jspdf
-
   const receiptHTML = `
 <!DOCTYPE html>
 <html lang="bn">
@@ -11,7 +8,7 @@ export function generateReceipt(donationData: any) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>দান রসিদ - ${donationData.donationId}</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap');
         
         * {
             margin: 0;
@@ -22,7 +19,7 @@ export function generateReceipt(donationData: any) {
         body {
             font-family: 'Noto Sans Bengali', sans-serif;
             line-height: 1.6;
-            color: #333;
+            color: #2d3748;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
@@ -33,18 +30,18 @@ export function generateReceipt(donationData: any) {
         
         .receipt-container {
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
             overflow: hidden;
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
             position: relative;
         }
         
         .receipt-header {
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
-            padding: 30px;
+            padding: 40px 30px;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -60,141 +57,222 @@ export function generateReceipt(donationData: any) {
             background: repeating-linear-gradient(
                 45deg,
                 transparent,
-                transparent 10px,
-                rgba(255,255,255,0.1) 10px,
-                rgba(255,255,255,0.1) 20px
+                transparent 15px,
+                rgba(255,255,255,0.1) 15px,
+                rgba(255,255,255,0.1) 30px
             );
-            animation: pattern-move 20s linear infinite;
+            animation: pattern-move 25s linear infinite;
         }
         
         @keyframes pattern-move {
-            0% { transform: translateX(-50px) translateY(-50px); }
+            0% { transform: translateX(-60px) translateY(-60px); }
             100% { transform: translateX(0px) translateY(0px); }
         }
         
         .org-logo {
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
             background: rgba(255,255,255,0.2);
             border-radius: 50%;
-            margin: 0 auto 20px;
+            margin: 0 auto 25px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
+            font-size: 40px;
             position: relative;
             z-index: 2;
+            border: 3px solid rgba(255,255,255,0.3);
         }
         
         .org-name {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             position: relative;
             z-index: 2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         .org-subtitle {
-            font-size: 16px;
-            opacity: 0.9;
+            font-size: 18px;
+            opacity: 0.95;
             position: relative;
             z-index: 2;
+            font-weight: 300;
         }
         
         .receipt-body {
-            padding: 40px;
+            padding: 50px 40px;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
         }
         
         .receipt-title {
             text-align: center;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 30px;
+            color: #1a202c;
+            margin-bottom: 40px;
             position: relative;
         }
         
         .receipt-title::after {
             content: '';
             position: absolute;
-            bottom: -10px;
+            bottom: -15px;
             left: 50%;
             transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, #10b981, #059669);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #10b981, #3b82f6);
             border-radius: 2px;
         }
         
         .receipt-info {
             display: grid;
-            gap: 20px;
-            margin-bottom: 30px;
+            gap: 25px;
+            margin-bottom: 40px;
         }
         
         .info-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            background: #f8fafc;
-            border-radius: 8px;
-            border-left: 4px solid #10b981;
+            padding: 20px 25px;
+            background: white;
+            border-radius: 12px;
+            border-left: 5px solid #10b981;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .info-row:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
         
         .info-label {
             font-weight: 600;
             color: #374151;
-            min-width: 150px;
+            min-width: 180px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .info-label::before {
+            content: '●';
+            color: #10b981;
+            margin-right: 10px;
+            font-size: 12px;
         }
         
         .info-value {
-            font-weight: 400;
+            font-weight: 500;
             color: #1f2937;
             text-align: right;
             flex: 1;
+            font-size: 16px;
         }
         
         .amount-highlight {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
             color: white !important;
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 20px !important;
+            font-weight: 700 !important;
+            border-left: 5px solid #047857 !important;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .amount-highlight::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 30px 30px 0;
+            border-color: transparent #047857 transparent transparent;
+        }
+        
+        .amount-highlight .info-label::before {
+            color: white;
         }
         
         .receipt-footer {
-            background: #f8fafc;
-            padding: 30px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 40px 30px;
             text-align: center;
-            border-top: 2px dashed #e5e7eb;
+            border-top: 3px dashed #cbd5e0;
+            position: relative;
         }
         
         .thank-you {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 10px;
+            color: #1a202c;
+            margin-bottom: 15px;
+            position: relative;
         }
         
         .dua {
-            font-size: 16px;
-            color: #6b7280;
+            font-size: 18px;
+            color: #4a5568;
             font-style: italic;
+            margin-bottom: 25px;
+            font-weight: 300;
         }
         
         .receipt-id {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(255,255,255,0.2);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.25);
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 14px;
             font-weight: 600;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
         }
         
-        .print-info {
+        .contact-info {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
             margin-top: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .contact-info h4 {
+            color: #1a202c;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .contact-details {
+            font-size: 14px;
+            color: #4a5568;
+            line-height: 1.8;
+        }
+        
+        .verification-code {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        
+        .print-date {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
             font-size: 12px;
             color: #6b7280;
         }
@@ -206,8 +284,25 @@ export function generateReceipt(donationData: any) {
             }
             .receipt-container {
                 box-shadow: none;
-                border: 1px solid #e5e7eb;
+                border: 2px solid #e5e7eb;
+                max-width: none;
+                width: 100%;
             }
+        }
+        
+        .qr-placeholder {
+            width: 80px;
+            height: 80px;
+            background: #f3f4f6;
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            font-size: 12px;
+            color: #6b7280;
+            text-align: center;
         }
     </style>
 </head>
@@ -217,7 +312,7 @@ export function generateReceipt(donationData: any) {
             <div class="receipt-id">রসিদ নং: ${donationData.donationId}</div>
             <div class="org-logo">🕌</div>
             <div class="org-name">ইসলামী সমাজকল্যাণ পরিষদ</div>
-            <div class="org-subtitle">গ্রামীণ সমাজের উন্নয়নে নিবেদিত</div>
+            <div class="org-subtitle">গ্রামীণ সমাজের উন্নয়নে নিবেদিত একটি অরাজনৈতিক ও অলাভজনক সংস্থা</div>
         </div>
         
         <div class="receipt-body">
@@ -225,54 +320,78 @@ export function generateReceipt(donationData: any) {
             
             <div class="receipt-info">
                 <div class="info-row">
-                    <span class="info-label">দানকারীর নাম:</span>
+                    <span class="info-label">দানকারীর নাম</span>
                     <span class="info-value">${donationData.donorName}</span>
                 </div>
                 
                 <div class="info-row">
-                    <span class="info-label">মোবাইল নম্বর:</span>
+                    <span class="info-label">মোবাইল নম্বর</span>
                     <span class="info-value">${donationData.phone}</span>
                 </div>
                 
                 <div class="info-row">
-                    <span class="info-label">ঠিকানা:</span>
+                    <span class="info-label">ঠিকানা</span>
                     <span class="info-value">${donationData.address}</span>
                 </div>
                 
                 <div class="info-row amount-highlight">
-                    <span class="info-label">দানের পরিমাণ:</span>
-                    <span class="info-value">৳${donationData.amount?.toLocaleString()}</span>
+                    <span class="info-label">দানের পরিমাণ</span>
+                    <span class="info-value">৳${donationData.amount?.toLocaleString()} টাকা</span>
                 </div>
                 
                 <div class="info-row">
-                    <span class="info-label">পেমেন্ট মেথড:</span>
-                    <span class="info-value">${donationData.paymentMethod === "bkash" ? "বিকাশ" : donationData.paymentMethod === "nagad" ? "নগদ" : "ব্যাংক ট্রান্সফার"}</span>
+                    <span class="info-label">পেমেন্ট মেথড</span>
+                    <span class="info-value">${
+                      donationData.paymentMethod === "bkash"
+                        ? "বিকাশ (bKash)"
+                        : donationData.paymentMethod === "nagad"
+                          ? "নগদ (Nagad)"
+                          : "ব্যাংক ট্রান্সফার"
+                    }</span>
                 </div>
                 
                 <div class="info-row">
-                    <span class="info-label">ট্রানজেকশন আইডি:</span>
+                    <span class="info-label">ট্রানজেকশন আইডি</span>
                     <span class="info-value">${donationData.transactionId}</span>
                 </div>
                 
                 <div class="info-row">
-                    <span class="info-label">তারিখ ও সময়:</span>
+                    <span class="info-label">তারিখ ও সময়</span>
                     <span class="info-value">${donationData.date} - ${donationData.time}</span>
                 </div>
+            </div>
+            
+            <div class="verification-code">
+                যাচাইকরণ কোড: ${donationData.donationId.split("-")[1]}
             </div>
         </div>
         
         <div class="receipt-footer">
             <div class="thank-you">আপনার দানের জন্য আন্তরিক ধন্যবাদ!</div>
-            <div class="dua">আল্লাহ তা'আলা আপনাকে উত্তম প্রতিদান দিন</div>
-            <div class="print-info">
-                যোগাযোগ: +৮৮০ ১৭১২-৩৪৫৬৭৮ | info@islamicwelfare.org<br>
-                গ্রাম: আদর্শগ্রাম, উপজেলা: সদর, জেলা: ঢাকা
+            <div class="dua">আল্লাহ তা'আলা আপনাকে উত্তম প্রতিদান দিন এবং আপনার সম্পদে বরকত দান করুন</div>
+            
+            <div class="qr-placeholder">
+                QR কোড<br>
+                (যাচাইয়ের জন্য)
+            </div>
+            
+            <div class="contact-info">
+                <h4>যোগাযোগের তথ্য</h4>
+                <div class="contact-details">
+                    📞 ফোন: +৮৮০ ১৭১২-৩৪৫৬৭৮<br>
+                    ✉️ ইমেইল: info@islamicwelfare.org<br>
+                    🏠 ঠিকানা: গ্রাম: আদর্শগ্রাম, উপজেলা: সদর, জেলা: ঢাকা<br>
+                    🌐 ওয়েবসাইট: www.islamicwelfare.org
+                </div>
+            </div>
+            
+            <div class="print-date">
+                মুদ্রণ: ${new Date().toLocaleDateString("bn-BD")} ${new Date().toLocaleTimeString("bn-BD")}
             </div>
         </div>
     </div>
     
     <script>
-        // Auto print when page loads
         window.onload = function() {
             setTimeout(function() {
                 window.print();
@@ -284,7 +403,7 @@ export function generateReceipt(donationData: any) {
   `
 
   // Create a new window with the receipt
-  const printWindow = window.open("", "_blank", "width=800,height=900")
+  const printWindow = window.open("", "_blank", "width=900,height=1000")
   if (printWindow) {
     printWindow.document.open()
     printWindow.document.write(receiptHTML)
@@ -301,21 +420,4 @@ export function generateReceipt(donationData: any) {
   a.click()
   document.body.removeChild(a)
   window.URL.revokeObjectURL(url)
-}
-
-// Alternative function for generating PDF with jsPDF (when installed)
-export async function generatePDFReceipt(donationData: any) {
-  try {
-    // This would require: npm install jspdf html2canvas
-    // const jsPDF = await import('jspdf')
-    // const html2canvas = await import('html2canvas')
-
-    console.log("PDF generation would require jsPDF installation")
-
-    // For now, use the HTML version
-    generateReceipt(donationData)
-  } catch (error) {
-    console.error("PDF generation error:", error)
-    generateReceipt(donationData)
-  }
 }

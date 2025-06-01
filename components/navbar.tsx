@@ -14,6 +14,7 @@ export function Navbar() {
     { name: "ভর্তির আবেদন", href: "/admission" },
     { name: "ক্যাম্পেইনে যোগদান", href: "/join-campaign" },
     { name: "দান করুন", href: "/donate" },
+    { name: "আর্থিক ব্যবস্থাপনা", href: "/financial-management" },
     { name: "লগইন", href: "/login" },
   ]
 
