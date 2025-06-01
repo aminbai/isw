@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { Heart, Users, HandIcon as Hands } from "lucide-react"
+import { HeroSlideshow } from "./hero-slideshow"
 
 export function Hero() {
   return (
@@ -47,6 +48,9 @@ export function Hero() {
           </div>
         </div>
       </div>
+
+      {/* Hero Slideshow */}
+      <HeroSlideshow />
     </section>
   )
 }
