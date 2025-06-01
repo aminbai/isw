@@ -20,12 +20,12 @@ if (missingEnvVars.length > 0) {
 }
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBJXNDClmWC96JttLBAqZ_cgzwUU9lGkkU",
-  authDomain: "islamic-welfare-org-bd.firebaseapp.com",
-  projectId: "islamic-welfare-org-bd",
-  storageBucket: "islamic-welfare-org-bd.appspot.com",
-  messagingSenderId: "222987932917",
-  appId: "1:222987932917:web:62fcd59b0f633cedc0a1bc"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "demo-api-key",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "demo-project.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "demo-project",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "demo-project.appspot.com",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "123456789",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:123456789:web:abcdef123456",
 }
 
 // Initialize Firebase
@@ -38,6 +38,7 @@ try {
   db = getFirestore(app)
   auth = getAuth(app)
   console.log("Firebase initialized successfully")
+  console.log("Using project:", firebaseConfig.projectId)
 } catch (error) {
   console.warn("Firebase initialization failed:", error)
   console.warn("Using fallback storage instead")

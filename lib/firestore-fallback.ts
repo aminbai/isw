@@ -40,6 +40,12 @@ const getStorageKey = (collection: string) => `islamic-welfare-${collection}`
 
 const saveToStorage = (collection: string, data: any) => {
   try {
+    // Check if we're in browser environment
+    if (typeof window === "undefined") {
+      console.log("Server-side rendering, cannot use localStorage")
+      return { success: true, id: `server-${Date.now()}` }
+    }
+
     const existing = JSON.parse(localStorage.getItem(getStorageKey(collection)) || "[]")
     const newData = {
       ...data,
@@ -48,6 +54,7 @@ const saveToStorage = (collection: string, data: any) => {
     }
     existing.push(newData)
     localStorage.setItem(getStorageKey(collection), JSON.stringify(existing))
+    console.log(`Saved to localStorage: ${collection}`, newData)
     return { success: true, id: newData.id }
   } catch (error) {
     console.error("Storage error:", error)
@@ -57,7 +64,14 @@ const saveToStorage = (collection: string, data: any) => {
 
 const getFromStorage = (collection: string) => {
   try {
+    // Check if we're in browser environment
+    if (typeof window === "undefined") {
+      console.log("Server-side rendering, returning empty array")
+      return { success: true, data: [] }
+    }
+
     const data = JSON.parse(localStorage.getItem(getStorageKey(collection)) || "[]")
+    console.log(`Retrieved from localStorage: ${collection}`, data)
     return { success: true, data }
   } catch (error) {
     console.error("Storage retrieval error:", error)
@@ -67,31 +81,37 @@ const getFromStorage = (collection: string) => {
 
 // Fallback functions
 export const submitAdmissionFormFallback = async (data: Omit<AdmissionData, "submittedAt" | "status">) => {
+  console.log("Using fallback storage for admission form")
   await new Promise((resolve) => setTimeout(resolve, 1000)) // Simulate network delay
   return saveToStorage("admissions", { ...data, status: "pending" })
 }
 
 export const submitCampaignJoinFormFallback = async (data: Omit<CampaignJoinData, "submittedAt" | "status">) => {
+  console.log("Using fallback storage for campaign join form")
   await new Promise((resolve) => setTimeout(resolve, 1000))
   return saveToStorage("campaignJoins", { ...data, status: "pending" })
 }
 
 export const submitDonationFormFallback = async (data: Omit<DonationData, "submittedAt" | "verified">) => {
+  console.log("Using fallback storage for donation form")
   await new Promise((resolve) => setTimeout(resolve, 1000))
   return saveToStorage("donations", { ...data, verified: false })
 }
 
 export const getAdmissionsFallback = async () => {
+  console.log("Using fallback storage to get admissions")
   await new Promise((resolve) => setTimeout(resolve, 500))
   return getFromStorage("admissions")
 }
 
 export const getCampaignJoinsFallback = async () => {
+  console.log("Using fallback storage to get campaign joins")
   await new Promise((resolve) => setTimeout(resolve, 500))
   return getFromStorage("campaignJoins")
 }
 
 export const getDonationsFallback = async () => {
+  console.log("Using fallback storage to get donations")
   await new Promise((resolve) => setTimeout(resolve, 500))
   return getFromStorage("donations")
 }

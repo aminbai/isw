@@ -47,7 +47,14 @@ export interface DonationData {
 // Check if Firebase is properly configured
 const isFirebaseConfigured = () => {
   try {
-    return !!(process.env.NEXT_PUBLIC_FIREBASE_API_KEY && process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID && db)
+    // Check if we have actual environment variables (not demo values)
+    const hasRealConfig =
+      process.env.NEXT_PUBLIC_FIREBASE_API_KEY &&
+      process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID &&
+      process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== "demo-api-key" &&
+      process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID !== "demo-project"
+
+    return !!(hasRealConfig && db)
   } catch {
     return false
   }
@@ -55,13 +62,17 @@ const isFirebaseConfigured = () => {
 
 // Admission form functions
 export const submitAdmissionForm = async (data: Omit<AdmissionData, "submittedAt" | "status">) => {
+  console.log("Submitting admission form...")
+  console.log("Firebase configured:", isFirebaseConfigured())
+
   // Try Firebase first, fallback to localStorage if it fails
   if (!isFirebaseConfigured()) {
-    console.log("Firebase not configured, using fallback storage")
+    console.log("Firebase not properly configured, using fallback storage")
     return submitAdmissionFormFallback(data)
   }
 
   try {
+    console.log("Attempting to save to Firestore...")
     // Add the document to Firestore
     const docRef = await addDoc(collection(db, "admissions"), {
       ...data,
@@ -73,12 +84,14 @@ export const submitAdmissionForm = async (data: Omit<AdmissionData, "submittedAt
     return { success: true, id: docRef.id }
   } catch (error: any) {
     console.error("Firebase error, using fallback:", error)
+    console.error("Error details:", error.message)
     return submitAdmissionFormFallback(data)
   }
 }
 
 export const getAdmissions = async () => {
   if (!isFirebaseConfigured()) {
+    console.log("Using fallback for admissions")
     return getAdmissionsFallback()
   }
 
@@ -100,11 +113,16 @@ export const getAdmissions = async () => {
 
 // Campaign join functions
 export const submitCampaignJoinForm = async (data: Omit<CampaignJoinData, "submittedAt" | "status">) => {
+  console.log("Submitting campaign join form...")
+  console.log("Firebase configured:", isFirebaseConfigured())
+
   if (!isFirebaseConfigured()) {
+    console.log("Firebase not properly configured, using fallback storage")
     return submitCampaignJoinFormFallback(data)
   }
 
   try {
+    console.log("Attempting to save campaign join to Firestore...")
     const docRef = await addDoc(collection(db, "campaignJoins"), {
       ...data,
       submittedAt: Timestamp.now(),
@@ -115,12 +133,14 @@ export const submitCampaignJoinForm = async (data: Omit<CampaignJoinData, "submi
     return { success: true, id: docRef.id }
   } catch (error: any) {
     console.error("Firebase error, using fallback:", error)
+    console.error("Error details:", error.message)
     return submitCampaignJoinFormFallback(data)
   }
 }
 
 export const getCampaignJoins = async () => {
   if (!isFirebaseConfigured()) {
+    console.log("Using fallback for campaign joins")
     return getCampaignJoinsFallback()
   }
 
@@ -142,11 +162,16 @@ export const getCampaignJoins = async () => {
 
 // Donation functions
 export const submitDonationForm = async (data: Omit<DonationData, "submittedAt" | "verified">) => {
+  console.log("Submitting donation form...")
+  console.log("Firebase configured:", isFirebaseConfigured())
+
   if (!isFirebaseConfigured()) {
+    console.log("Firebase not properly configured, using fallback storage")
     return submitDonationFormFallback(data)
   }
 
   try {
+    console.log("Attempting to save donation to Firestore...")
     const docRef = await addDoc(collection(db, "donations"), {
       ...data,
       amount: Number(data.amount),
@@ -158,12 +183,14 @@ export const submitDonationForm = async (data: Omit<DonationData, "submittedAt" 
     return { success: true, id: docRef.id }
   } catch (error: any) {
     console.error("Firebase error, using fallback:", error)
+    console.error("Error details:", error.message)
     return submitDonationFormFallback(data)
   }
 }
 
 export const getDonations = async () => {
   if (!isFirebaseConfigured()) {
+    console.log("Using fallback for donations")
     return getDonationsFallback()
   }
 
@@ -185,6 +212,12 @@ export const getDonations = async () => {
 
 // Get donations by date range for reports
 export const getDonationsByDateRange = async (startDate: Date, endDate: Date) => {
+  if (!isFirebaseConfigured()) {
+    // For fallback, just return all donations (simplified)
+    const result = await getDonationsFallback()
+    return result
+  }
+
   try {
     const q = query(
       collection(db, "donations"),

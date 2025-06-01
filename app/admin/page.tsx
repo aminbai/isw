@@ -34,11 +34,16 @@ export default function AdminPage() {
   const fetchData = async () => {
     setIsLoading(true)
     try {
+      console.log("Fetching admin data...")
       const [donationsResult, admissionsResult, campaignJoinsResult] = await Promise.all([
         getDonations(),
         getAdmissions(),
         getCampaignJoins(),
       ])
+
+      console.log("Donations result:", donationsResult)
+      console.log("Admissions result:", admissionsResult)
+      console.log("Campaign joins result:", campaignJoinsResult)
 
       setData({
         donations: donationsResult.success ? donationsResult.data : [],
@@ -46,6 +51,7 @@ export default function AdminPage() {
         campaignJoins: campaignJoinsResult.success ? campaignJoinsResult.data : [],
       })
     } catch (error) {
+      console.error("Error fetching data:", error)
       setError("ডেটা লোড করতে সমস্যা হয়েছে")
     } finally {
       setIsLoading(false)
@@ -80,7 +86,11 @@ export default function AdminPage() {
     // Convert Firebase Timestamp to readable date
     const processedData = reportData.map((item) => ({
       ...item,
-      submittedAt: item.submittedAt?.toDate?.()?.toLocaleDateString("bn-BD") || item.submittedAt,
+      submittedAt:
+        item.submittedAt?.toDate?.()?.toLocaleDateString("bn-BD") ||
+        (typeof item.submittedAt === "string"
+          ? new Date(item.submittedAt).toLocaleDateString("bn-BD")
+          : item.submittedAt),
     }))
 
     const csvContent =
@@ -206,50 +216,63 @@ export default function AdminPage() {
                 </button>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        দানকারী
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        পরিমাণ
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        পেমেন্ট মেথড
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        ট্রানজেকশন আইডি
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        তারিখ
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        ফোন
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {data.donations.map((donation) => (
-                      <tr key={donation.id}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          {donation.donorName}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          ৳{donation.amount?.toLocaleString()}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{donation.paymentMethod}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{donation.transactionId}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {donation.submittedAt?.toDate?.()?.toLocaleDateString("bn-BD")}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{donation.phone}</td>
+              {data.donations.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-gray-500">কোন দান পাওয়া যায়নি</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          দানকারী
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          পরিমাণ
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          পেমেন্ট মেথড
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          ট্রানজেকশন আইডি
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          তারিখ
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          ফোন
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {data.donations.map((donation) => (
+                        <tr key={donation.id}>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {donation.donorName}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            ৳{donation.amount?.toLocaleString()}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {donation.paymentMethod}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {donation.transactionId}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {donation.submittedAt?.toDate?.()?.toLocaleDateString("bn-BD") ||
+                              (typeof donation.submittedAt === "string"
+                                ? new Date(donation.submittedAt).toLocaleDateString("bn-BD")
+                                : "N/A")}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{donation.phone}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           )}
 
@@ -264,48 +287,59 @@ export default function AdminPage() {
                 </button>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        নাম
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        অভিভাবক
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        শিক্ষা
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        পেশা
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        ফোন
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        তারিখ
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {data.admissions.map((admission) => (
-                      <tr key={admission.id}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          {admission.fullName}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{admission.guardianName}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{admission.education}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{admission.profession}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{admission.phone}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {admission.submittedAt?.toDate?.()?.toLocaleDateString("bn-BD")}
-                        </td>
+              {data.admissions.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-gray-500">কোন আবেদন পাওয়া যায়নি</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          নাম
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          অভিভাবক
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          শিক্ষা
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          পেশা
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          ফোন
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          তারিখ
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {data.admissions.map((admission) => (
+                        <tr key={admission.id}>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {admission.fullName}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {admission.guardianName}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{admission.education}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{admission.profession}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{admission.phone}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {admission.submittedAt?.toDate?.()?.toLocaleDateString("bn-BD") ||
+                              (typeof admission.submittedAt === "string"
+                                ? new Date(admission.submittedAt).toLocaleDateString("bn-BD")
+                                : "N/A")}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           )}
 
@@ -320,42 +354,51 @@ export default function AdminPage() {
                 </button>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        নাম
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        ক্যাম্পেইন
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        ফোন
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        অভিজ্ঞতা
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        তারিখ
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {data.campaignJoins.map((join) => (
-                      <tr key={join.id}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{join.name}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{join.campaignName}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{join.phone}</td>
-                        <td className="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">{join.experience}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {join.submittedAt?.toDate?.()?.toLocaleDateString("bn-BD")}
-                        </td>
+              {data.campaignJoins.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-gray-500">কোন ক্যাম্পেইন যোগদান পাওয়া যায়নি</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          নাম
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          ক্যাম্পেইন
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          ফোন
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          অভিজ্ঞতা
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          তারিখ
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {data.campaignJoins.map((join) => (
+                        <tr key={join.id}>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{join.name}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{join.campaignName}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{join.phone}</td>
+                          <td className="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">{join.experience}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {join.submittedAt?.toDate?.()?.toLocaleDateString("bn-BD") ||
+                              (typeof join.submittedAt === "string"
+                                ? new Date(join.submittedAt).toLocaleDateString("bn-BD")
+                                : "N/A")}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           )}
         </div>
