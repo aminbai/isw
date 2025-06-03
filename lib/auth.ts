@@ -5,8 +5,8 @@ import { isFirebaseConfigured } from "./firebase"
 export const signIn = async (email: string, password: string) => {
   if (!isFirebaseConfigured()) {
     console.log("Firebase not configured, using demo login")
-    // Demo login for testing
-    if (email === "admin@islamicwelfare.org" && password === "password123") {
+    // ⚠️ এখানে পরিবর্তন করো - ডেমো লগইন সরিয়ে দিন যখন Firebase সেটআপ হবে
+    if (email === "admin@islamicwelfare.org" && password === "Admin123!") {
       return { success: true, user: { email } }
     }
     return { success: false, error: "ভুল ইমেইল বা পাসওয়ার্ড" }

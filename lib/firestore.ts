@@ -87,7 +87,7 @@ export const submitAdmissionForm = async (data: Omit<AdmissionData, "submittedAt
   console.log("Submitting admission form...")
   console.log("Firebase configured:", isFirebaseConfigured())
 
-  // Try Firebase first, fallback to localStorage if it fails
+  // ⚠️ এখানে পরিবর্তন করো - Firebase সেটআপ হলে এই fallback অংশ সরিয়ে দিন
   if (!isFirebaseConfigured()) {
     console.log("Firebase not properly configured, using fallback storage")
     return submitAdmissionFormFallback(data)
@@ -112,8 +112,9 @@ export const submitAdmissionForm = async (data: Omit<AdmissionData, "submittedAt
 }
 
 export const getAdmissions = async () => {
+  // ⚠️ এখানে পরিবর্তন করো - Firebase সেটআপ হলে এই fallback অংশ সরিয়ে দিন
   if (!isFirebaseConfigured()) {
-    console.log("Using fallback for admissions")
+    console.log("Using for admissions")
     return getAdmissionsFallback()
   }
 
@@ -139,8 +140,9 @@ export const submitCampaignJoinForm = async (data: Omit<CampaignJoinData, "submi
   console.log("Submitting campaign join form...")
   console.log("Firebase configured:", isFirebaseConfigured())
 
+  // ⚠️ এখানে পরিবর্তন করো - Firebase সেটআপ হলে এই fallback অংশ সরিয়ে দিন
   if (!isFirebaseConfigured()) {
-    console.log("Firebase not properly configured, using fallback storage")
+    console.log("Firebase not properly configured, using  storage")
     return submitCampaignJoinFormFallback(data)
   }
 
@@ -162,8 +164,9 @@ export const submitCampaignJoinForm = async (data: Omit<CampaignJoinData, "submi
 }
 
 export const getCampaignJoins = async () => {
+  // ⚠️ এখানে পরিবর্তন করো - Firebase সেটআপ হলে এই fallback অংশ সরিয়ে দিন
   if (!isFirebaseConfigured()) {
-    console.log("Using fallback for campaign joins")
+    console.log("Using for campaign joins")
     return getCampaignJoinsFallback()
   }
 
@@ -189,8 +192,9 @@ export const submitDonationForm = async (data: Omit<DonationData, "submittedAt" 
   console.log("Submitting donation form...")
   console.log("Firebase configured:", isFirebaseConfigured())
 
+  // ⚠️ এখানে পরিবর্তন করো - Firebase সেটআপ হলে এই fallback অংশ সরিয়ে দিন
   if (!isFirebaseConfigured()) {
-    console.log("Firebase not properly configured, using fallback storage")
+    console.log("Firebase not properly configured, using  storage")
     return submitDonationFormFallback(data)
   }
 
@@ -213,8 +217,9 @@ export const submitDonationForm = async (data: Omit<DonationData, "submittedAt" 
 }
 
 export const getDonations = async () => {
+  // ⚠️ এখানে পরিবর্তন করো - Firebase সেটআপ হলে এই fallback অংশ সরিয়ে দিন
   if (!isFirebaseConfigured()) {
-    console.log("Using fallback for donations")
+    console.log("Using for donations")
     return getDonationsFallback()
   }
 
@@ -241,8 +246,9 @@ export const getDonations = async () => {
 export const submitExpenseForm = async (data: Omit<ExpenseData, "submittedAt" | "status" | "id">) => {
   console.log("Submitting expense form...", data)
 
+  // ⚠️ এখানে পরিবর্তন করো - Firebase সেটআপ হলে এই fallback অংশ সরিয়ে দিন
   if (!isFirebaseConfigured()) {
-    console.log("Firebase not configured, using fallback")
+    console.log("Firebase not configured, using")
     // Store in localStorage as fallback
     const expense = {
       ...data,
@@ -281,8 +287,9 @@ export const submitExpenseForm = async (data: Omit<ExpenseData, "submittedAt" | 
 }
 
 export const getExpenses = async () => {
+  // ⚠️ এখানে পরিবর্তন করো - Firebase সেটআপ হলে এই fallback অংশ সরিয়ে দিন
   if (!isFirebaseConfigured()) {
-    console.log("Using fallback for expenses")
+    console.log("Using for expenses")
     try {
       const expenses = JSON.parse(localStorage.getItem("islamic-welfare-expenses") || "[]")
       return { success: true, data: expenses }
@@ -312,6 +319,7 @@ export const getExpenses = async () => {
 export const createBudget = async (data: Omit<BudgetData, "createdAt" | "updatedAt" | "id">) => {
   console.log("Creating budget...", data)
 
+  // ⚠️ এখানে পরিবর্তন করো - Firebase সেটআপ হলে এই fallback অংশ সরিয়ে দিন
   if (!isFirebaseConfigured()) {
     console.log("Firebase not configured, using localStorage")
     const budget = {
@@ -353,8 +361,9 @@ export const createBudget = async (data: Omit<BudgetData, "createdAt" | "updated
 }
 
 export const getBudgets = async () => {
+  // ⚠️ এখানে পরিবর্তন করো - Firebase সেটআপ হলে এই fallback অংশ সরিয়ে দিন
   if (!isFirebaseConfigured()) {
-    console.log("Using fallback for budgets")
+    console.log("Using for budgets")
     try {
       const budgets = JSON.parse(localStorage.getItem("islamic-welfare-budgets") || "[]")
       return { success: true, data: budgets }
@@ -382,6 +391,7 @@ export const getBudgets = async () => {
 
 // Financial Reports
 export const generateFinancialReport = async (data: Omit<FinancialReportData, "generatedAt" | "id">) => {
+  // ⚠️ এখানে পরিবর্তন করো - Firebase সেটআপ হলে এই fallback অংশ সরিয়ে দিন
   if (!isFirebaseConfigured()) {
     const report = {
       ...data,
@@ -418,6 +428,7 @@ export const generateFinancialReport = async (data: Omit<FinancialReportData, "g
 }
 
 export const getFinancialReports = async () => {
+  // ⚠️ এখানে পরিবর্তন করো - Firebase সেটআপ হলে এই fallback অংশ সরিয়ে দিন
   if (!isFirebaseConfigured()) {
     try {
       const reports = JSON.parse(localStorage.getItem("islamic-welfare-reports") || "[]")
@@ -446,6 +457,7 @@ export const getFinancialReports = async () => {
 
 // Get donations by date range for reports
 export const getDonationsByDateRange = async (startDate: Date, endDate: Date) => {
+  // ⚠️ এখানে পরিবর্তন করো - Firebase সেটআপ হলে এই fallback অংশ সরিয়ে দিন
   if (!isFirebaseConfigured()) {
     // For fallback, just return all donations (simplified)
     const result = await getDonationsFallback()
@@ -476,6 +488,7 @@ export const getDonationsByDateRange = async (startDate: Date, endDate: Date) =>
 
 // Get expenses by date range
 export const getExpensesByDateRange = async (startDate: Date, endDate: Date) => {
+  // ⚠️ এখানে পরিবর্তন করো - Firebase সেটআপ হলে এই fallback অংশ সরিয়ে দিন
   if (!isFirebaseConfigured()) {
     try {
       const expenses = JSON.parse(localStorage.getItem("islamic-welfare-expenses") || "[]")
@@ -509,6 +522,7 @@ export const getExpensesByDateRange = async (startDate: Date, endDate: Date) => 
 
 // Update budget spent amount
 export const updateBudgetSpent = async (budgetId: string, newSpentAmount: number) => {
+  // ⚠️ এখানে পরিবর্তন করো - Firebase সেটআপ হলে এই fallback অংশ সরিয়ে দিন
   if (!isFirebaseConfigured()) {
     try {
       const budgets = JSON.parse(localStorage.getItem("islamic-welfare-budgets") || "[]")
