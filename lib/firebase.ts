@@ -19,7 +19,7 @@ if (missingEnvVars.length > 0) {
   console.warn("Firebase features will use fallback storage")
 }
 
-// Firebase configuration
+// Firebase configuration - এখন আপনার প্রকৃত values ব্যবহার করছে
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyBJXNDClmWC96JttLBAqZ_cgzwUU9lGkkU",
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "islamishomaj-ce77c.firebaseapp.com",
@@ -38,25 +38,30 @@ try {
   app = initializeApp(firebaseConfig)
   db = getFirestore(app)
   auth = getAuth(app)
-  console.log("Firebase initialized successfully")
-  console.log("Using project:", firebaseConfig.projectId)
+  console.log("✅ Firebase initialized successfully")
+  console.log("🔥 Using project:", firebaseConfig.projectId)
 } catch (error) {
-  console.warn("Firebase initialization failed:", error)
-  console.warn("Using fallback storage instead")
+  console.warn("❌ Firebase initialization failed:", error)
+  console.warn("📦 Using fallback storage instead")
 }
 
-// Function to check if Firebase is configured
+// ✅ সঠিক Firebase configuration check
 export const isFirebaseConfigured = () => {
   try {
-    // ✅ সঠিক উপায় - শুধু check করুন যে values আছে কিনা
-    const hasRealConfig =
-      process.env.NEXT_PUBLIC_FIREBASE_API_KEY &&
-      process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID &&
-      process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== "AIzaSyBJXNDClmWC96JttLBAqZ_cgzwUU9lGkkU" &&
-      process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID !== "islamishomaj-ce77c"
+    // সব environment variables আছে কিনা check করুন
+    const hasAllEnvVars = requiredEnvVars.every((envVar) => process.env[envVar])
 
-    return !!(hasRealConfig && db)
-  } catch {
+    // Firebase app এবং db initialized হয়েছে কিনা
+    const isInitialized = !!(app && db && auth)
+
+    console.log("🔍 Firebase Config Check:")
+    console.log("- Environment variables:", hasAllEnvVars ? "✅" : "❌")
+    console.log("- Firebase initialized:", isInitialized ? "✅" : "❌")
+    console.log("- Project ID:", firebaseConfig.projectId)
+
+    return hasAllEnvVars && isInitialized
+  } catch (error) {
+    console.error("❌ Firebase config check failed:", error)
     return false
   }
 }
