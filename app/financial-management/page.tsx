@@ -195,6 +195,17 @@ export default function FinancialManagementPage() {
   const handleExpenseSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    // ফর্ম ভ্যালিডেশন
+    if (!expenseForm.category || !expenseForm.amount || !expenseForm.description || !expenseForm.paymentMethod) {
+      alert("সকল প্রয়োজনীয় ক্ষেত্র পূরণ করুন")
+      return
+    }
+
+    if (Number(expenseForm.amount) <= 0) {
+      alert("পরিমাণ ০ এর চেয়ে বেশি হতে হবে")
+      return
+    }
+
     try {
       const result = await submitExpenseForm({
         category: expenseForm.category,
@@ -222,7 +233,7 @@ export default function FinancialManagementPage() {
         })
         fetchFinancialData() // Refresh data
       } else {
-        alert("ব্যয় যোগ করতে সমস্যা হয়েছে")
+        alert(result.error || "ব্যয় যোগ করতে সমস্যা হয়েছে")
       }
     } catch (error) {
       console.error("Error submitting expense:", error)
@@ -232,6 +243,17 @@ export default function FinancialManagementPage() {
 
   const handleBudgetSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // ফর্ম ভ্যালিডেশন
+    if (!budgetForm.category || !budgetForm.allocatedAmount || !budgetForm.fiscalYear) {
+      alert("সকল প্রয়োজনীয় ক্ষেত্র পূরণ করুন")
+      return
+    }
+
+    if (Number(budgetForm.allocatedAmount) <= 0) {
+      alert("বরাদ্দ পরিমাণ ০ এর চেয়ে বেশি হতে হবে")
+      return
+    }
 
     try {
       const result = await createBudget({
@@ -252,7 +274,7 @@ export default function FinancialManagementPage() {
         })
         fetchFinancialData() // Refresh data
       } else {
-        alert("বাজেট তৈরি করতে সমস্যা হয়েছে")
+        alert(result.error || "বাজেট তৈরি করতে সমস্যা হয়েছে")
       }
     } catch (error) {
       console.error("Error creating budget:", error)

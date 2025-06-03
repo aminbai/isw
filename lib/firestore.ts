@@ -1,5 +1,6 @@
 import { collection, addDoc, getDocs, query, orderBy, where, Timestamp, updateDoc, doc } from "firebase/firestore"
 import { db } from "./firebase"
+import { isFirebaseConfigured } from "./firebase"
 import {
   submitAdmissionFormFallback,
   submitCampaignJoinFormFallback,
@@ -53,7 +54,7 @@ export interface ExpenseData {
   description: string
   approvedBy: string
   receiptNumber?: string
-  submittedAt: Timestamp
+  submittedAt: Timestamp | string
   status: "pending" | "approved" | "rejected"
   paymentMethod: string
   vendor?: string
@@ -66,8 +67,8 @@ export interface BudgetData {
   spentAmount: number
   remainingAmount: number
   fiscalYear: string
-  createdAt: Timestamp
-  updatedAt: Timestamp
+  createdAt: Timestamp | string
+  updatedAt: Timestamp | string
 }
 
 export interface FinancialReportData {
@@ -77,24 +78,8 @@ export interface FinancialReportData {
   totalIncome: number
   totalExpense: number
   netBalance: number
-  generatedAt: Timestamp
+  generatedAt: Timestamp | string
   generatedBy: string
-}
-
-// Check if Firebase is properly configured
-const isFirebaseConfigured = () => {
-  try {
-    // Check if we have actual environment variables (not demo values)
-    const hasRealConfig =
-      process.env.NEXT_PUBLIC_FIREBASE_API_KEY &&
-      process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID &&
-      process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== "demo-api-key" &&
-      process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID !== "demo-project"
-
-    return !!(hasRealConfig && db)
-  } catch {
-    return false
-  }
 }
 
 // Admission form functions
@@ -254,7 +239,7 @@ export const getDonations = async () => {
 
 // Expense Management
 export const submitExpenseForm = async (data: Omit<ExpenseData, "submittedAt" | "status" | "id">) => {
-  console.log("Submitting expense form...")
+  console.log("Submitting expense form...", data)
 
   if (!isFirebaseConfigured()) {
     console.log("Firebase not configured, using fallback")
@@ -266,21 +251,27 @@ export const submitExpenseForm = async (data: Omit<ExpenseData, "submittedAt" | 
       status: "approved" as const,
     }
 
-    const existing = JSON.parse(localStorage.getItem("islamic-welfare-expenses") || "[]")
-    existing.push(expense)
-    localStorage.setItem("islamic-welfare-expenses", JSON.stringify(existing))
-
-    return { success: true, id: expense.id }
+    try {
+      const existing = JSON.parse(localStorage.getItem("islamic-welfare-expenses") || "[]")
+      existing.push(expense)
+      localStorage.setItem("islamic-welfare-expenses", JSON.stringify(existing))
+      return { success: true, id: expense.id }
+    } catch (error) {
+      console.error("LocalStorage error:", error)
+      return { success: false, error: "ব্যয় সংরক্ষণে সমস্যা হয়েছে" }
+    }
   }
 
   try {
-    const docRef = await addDoc(collection(db, "expenses"), {
+    // সংখ্যা টাইপ নিশ্চিত করা
+    const expenseData = {
       ...data,
       amount: Number(data.amount),
       submittedAt: Timestamp.now(),
-      status: "approved",
-    })
+      status: "approved" as const,
+    }
 
+    const docRef = await addDoc(collection(db, "expenses"), expenseData)
     console.log("Expense document written with ID: ", docRef.id)
     return { success: true, id: docRef.id }
   } catch (error: any) {
@@ -292,8 +283,13 @@ export const submitExpenseForm = async (data: Omit<ExpenseData, "submittedAt" | 
 export const getExpenses = async () => {
   if (!isFirebaseConfigured()) {
     console.log("Using fallback for expenses")
-    const expenses = JSON.parse(localStorage.getItem("islamic-welfare-expenses") || "[]")
-    return { success: true, data: expenses }
+    try {
+      const expenses = JSON.parse(localStorage.getItem("islamic-welfare-expenses") || "[]")
+      return { success: true, data: expenses }
+    } catch (error) {
+      console.error("LocalStorage error:", error)
+      return { success: true, data: [] }
+    }
   }
 
   try {
@@ -314,7 +310,10 @@ export const getExpenses = async () => {
 
 // Budget Management
 export const createBudget = async (data: Omit<BudgetData, "createdAt" | "updatedAt" | "id">) => {
+  console.log("Creating budget...", data)
+
   if (!isFirebaseConfigured()) {
+    console.log("Firebase not configured, using localStorage")
     const budget = {
       ...data,
       id: `budget-${Date.now()}`,
@@ -322,23 +321,30 @@ export const createBudget = async (data: Omit<BudgetData, "createdAt" | "updated
       updatedAt: new Date().toISOString(),
     }
 
-    const existing = JSON.parse(localStorage.getItem("islamic-welfare-budgets") || "[]")
-    existing.push(budget)
-    localStorage.setItem("islamic-welfare-budgets", JSON.stringify(existing))
-
-    return { success: true, id: budget.id }
+    try {
+      const existing = JSON.parse(localStorage.getItem("islamic-welfare-budgets") || "[]")
+      existing.push(budget)
+      localStorage.setItem("islamic-welfare-budgets", JSON.stringify(existing))
+      return { success: true, id: budget.id }
+    } catch (error) {
+      console.error("LocalStorage error:", error)
+      return { success: false, error: "বাজেট তৈরিতে সমস্যা হয়েছে" }
+    }
   }
 
   try {
-    const docRef = await addDoc(collection(db, "budgets"), {
+    // সংখ্যা টাইপ নিশ্চিত করা
+    const budgetData = {
       ...data,
       allocatedAmount: Number(data.allocatedAmount),
       spentAmount: Number(data.spentAmount),
       remainingAmount: Number(data.remainingAmount),
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
-    })
+    }
 
+    const docRef = await addDoc(collection(db, "budgets"), budgetData)
+    console.log("Budget document written with ID: ", docRef.id)
     return { success: true, id: docRef.id }
   } catch (error: any) {
     console.error("Firebase error:", error)
@@ -348,8 +354,14 @@ export const createBudget = async (data: Omit<BudgetData, "createdAt" | "updated
 
 export const getBudgets = async () => {
   if (!isFirebaseConfigured()) {
-    const budgets = JSON.parse(localStorage.getItem("islamic-welfare-budgets") || "[]")
-    return { success: true, data: budgets }
+    console.log("Using fallback for budgets")
+    try {
+      const budgets = JSON.parse(localStorage.getItem("islamic-welfare-budgets") || "[]")
+      return { success: true, data: budgets }
+    } catch (error) {
+      console.error("LocalStorage error:", error)
+      return { success: true, data: [] }
+    }
   }
 
   try {
@@ -377,22 +389,27 @@ export const generateFinancialReport = async (data: Omit<FinancialReportData, "g
       generatedAt: new Date().toISOString(),
     }
 
-    const existing = JSON.parse(localStorage.getItem("islamic-welfare-reports") || "[]")
-    existing.push(report)
-    localStorage.setItem("islamic-welfare-reports", JSON.stringify(existing))
-
-    return { success: true, id: report.id }
+    try {
+      const existing = JSON.parse(localStorage.getItem("islamic-welfare-reports") || "[]")
+      existing.push(report)
+      localStorage.setItem("islamic-welfare-reports", JSON.stringify(existing))
+      return { success: true, id: report.id }
+    } catch (error) {
+      console.error("LocalStorage error:", error)
+      return { success: false, error: "রিপোর্ট তৈরিতে সমস্যা হয়েছে" }
+    }
   }
 
   try {
-    const docRef = await addDoc(collection(db, "financialReports"), {
+    const reportData = {
       ...data,
       totalIncome: Number(data.totalIncome),
       totalExpense: Number(data.totalExpense),
       netBalance: Number(data.netBalance),
       generatedAt: Timestamp.now(),
-    })
+    }
 
+    const docRef = await addDoc(collection(db, "financialReports"), reportData)
     return { success: true, id: docRef.id }
   } catch (error: any) {
     console.error("Firebase error:", error)
@@ -402,8 +419,13 @@ export const generateFinancialReport = async (data: Omit<FinancialReportData, "g
 
 export const getFinancialReports = async () => {
   if (!isFirebaseConfigured()) {
-    const reports = JSON.parse(localStorage.getItem("islamic-welfare-reports") || "[]")
-    return { success: true, data: reports }
+    try {
+      const reports = JSON.parse(localStorage.getItem("islamic-welfare-reports") || "[]")
+      return { success: true, data: reports }
+    } catch (error) {
+      console.error("LocalStorage error:", error)
+      return { success: true, data: [] }
+    }
   }
 
   try {
@@ -455,8 +477,13 @@ export const getDonationsByDateRange = async (startDate: Date, endDate: Date) =>
 // Get expenses by date range
 export const getExpensesByDateRange = async (startDate: Date, endDate: Date) => {
   if (!isFirebaseConfigured()) {
-    const expenses = JSON.parse(localStorage.getItem("islamic-welfare-expenses") || "[]")
-    return { success: true, data: expenses }
+    try {
+      const expenses = JSON.parse(localStorage.getItem("islamic-welfare-expenses") || "[]")
+      return { success: true, data: expenses }
+    } catch (error) {
+      console.error("LocalStorage error:", error)
+      return { success: true, data: [] }
+    }
   }
 
   try {
@@ -483,20 +510,25 @@ export const getExpensesByDateRange = async (startDate: Date, endDate: Date) => 
 // Update budget spent amount
 export const updateBudgetSpent = async (budgetId: string, newSpentAmount: number) => {
   if (!isFirebaseConfigured()) {
-    const budgets = JSON.parse(localStorage.getItem("islamic-welfare-budgets") || "[]")
-    const updatedBudgets = budgets.map((budget: any) => {
-      if (budget.id === budgetId) {
-        return {
-          ...budget,
-          spentAmount: newSpentAmount,
-          remainingAmount: budget.allocatedAmount - newSpentAmount,
-          updatedAt: new Date().toISOString(),
+    try {
+      const budgets = JSON.parse(localStorage.getItem("islamic-welfare-budgets") || "[]")
+      const updatedBudgets = budgets.map((budget: any) => {
+        if (budget.id === budgetId) {
+          return {
+            ...budget,
+            spentAmount: newSpentAmount,
+            remainingAmount: budget.allocatedAmount - newSpentAmount,
+            updatedAt: new Date().toISOString(),
+          }
         }
-      }
-      return budget
-    })
-    localStorage.setItem("islamic-welfare-budgets", JSON.stringify(updatedBudgets))
-    return { success: true }
+        return budget
+      })
+      localStorage.setItem("islamic-welfare-budgets", JSON.stringify(updatedBudgets))
+      return { success: true }
+    } catch (error) {
+      console.error("LocalStorage error:", error)
+      return { success: false, error: "বাজেট আপডেটে সমস্যা হয়েছে" }
+    }
   }
 
   try {

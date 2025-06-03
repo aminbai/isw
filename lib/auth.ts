@@ -1,18 +1,6 @@
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged, type User } from "firebase/auth"
 import { auth } from "./firebase"
-
-const isFirebaseConfigured = () => {
-  try {
-    return !!(
-      process.env.NEXT_PUBLIC_FIREBASE_API_KEY &&
-      process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID &&
-      process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== "AIzaSyBJXNDClmWC96JttLBAqZ_cgzwUU9lGkkU" &&
-      auth
-    )
-  } catch {
-    return false
-  }
-}
+import { isFirebaseConfigured } from "./firebase"
 
 export const signIn = async (email: string, password: string) => {
   if (!isFirebaseConfigured()) {
@@ -29,7 +17,20 @@ export const signIn = async (email: string, password: string) => {
     return { success: true, user: userCredential.user }
   } catch (error: any) {
     console.error("Error signing in:", error)
-    return { success: false, error: error.message }
+    let errorMessage = "লগইন করতে সমস্যা হয়েছে"
+
+    // Firebase এরর মেসেজ বাংলায় অনুবাদ
+    if (error.code === "auth/user-not-found") {
+      errorMessage = "এই ইমেইল দিয়ে কোন অ্যাকাউন্ট নেই"
+    } else if (error.code === "auth/wrong-password") {
+      errorMessage = "ভুল পাসওয়ার্ড"
+    } else if (error.code === "auth/invalid-email") {
+      errorMessage = "অবৈধ ইমেইল ঠিকানা"
+    } else if (error.code === "auth/too-many-requests") {
+      errorMessage = "অনেকবার ভুল প্রচেষ্টা করা হয়েছে, কিছুক্ষণ পর আবার চেষ্টা করুন"
+    }
+
+    return { success: false, error: errorMessage }
   }
 }
 
