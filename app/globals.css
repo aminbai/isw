@@ -245,3 +245,48 @@
 .stagger-5 {
   animation-delay: 0.5s;
 }
+
+/* Slideshow specific animations */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+/* Fix for dynamic color classes */
+.text-navy-800 {
+  color: #1e3a8a;
+}
+
+.bg-emerald-100 {
+  background-color: #d1fae5;
+}
+
+.text-emerald-600 {
+  color: #059669;
+}
+
+.bg-blue-100 {
+  background-color: #dbeafe;
+}
+
+.text-blue-600 {
+  color: #2563eb;
+}
+
+.bg-purple-100 {
+  background-color: #e9d5ff;
+}
+
+.text-purple-600 {
+  color: #9333ea;
+}

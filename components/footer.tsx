@@ -56,7 +56,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-gray-700 mt-8 pt-8 text-center">
-          <p className="text-sm text-gray-400">© ২০২৪ ইসলামী সমাজকল্যাণ পরিষদ। সকল অধিকার সংরক্ষিত।</p>
+          <p className="text-sm text-gray-400">© ২০২৪ হাছিরপাড়া ইসলামী সমাজকল্যাণ পরিষদ। সকল অধিকার সংরক্ষিত।</p>
         </div>
       </div>
     </footer>

@@ -13,10 +13,10 @@ export default function AboutPage() {
 
         {/* Organization Overview */}
         <div className="card mb-12">
-          <h2 className="text-2xl font-bold text-navy-800 mb-6 font-amiri">সংস্থ��র পরিচয়</h2>
+          <h2 className="text-2xl font-bold text-navy-800 mb-6 font-amiri">সংস্থার পরিচয়</h2>
           <div className="prose prose-lg max-w-none text-gray-600">
             <p className="leading-relaxed mb-4">
-              ইসলামী সমাজকল্যাণ পরিষদ একটি অরাজনৈতিক ও অলাভজনক সংস্থা যা ২০১৫ সালে প্রতিষ্ঠিত হয়েছে। আমাদের মূল লক্ষ্য হলো গ্রামীণ সমাজের
+              ইসলামী সমাজকল্যাণ পরিষদ একটি অরাজনৈতিক ও অলাভজনক সংস্থা যা ২০২৫ সালে প্রতিষ্ঠিত হয়েছে। আমাদের মূল লক্ষ্য হলো গ্রামীণ সমাজের
               সার্বিক উন্নয়ন এবং ইসলামী মূল্যবোধের প্রচার ও প্রসার।
             </p>
             <p className="leading-relaxed mb-4">
@@ -136,19 +136,19 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="text-center">
               <div className="bg-gray-200 w-24 h-24 rounded-full mx-auto mb-4"></div>
-              <h4 className="font-semibold text-navy-800">মোহাম্মদ আবদুল্লাহ</h4>
+              <h4 className="font-semibold text-navy-800">মোহাম্মদ সাইফুল ইসলাম</h4>
               <p className="text-sm text-gray-600">সভাপতি</p>
             </div>
 
             <div className="text-center">
               <div className="bg-gray-200 w-24 h-24 rounded-full mx-auto mb-4"></div>
-              <h4 className="font-semibold text-navy-800">আবু বকর সিদ্দিক</h4>
+              <h4 className="font-semibold text-navy-800">মোহাম্মদ পারবেজ উদ্দিন</h4>
               <p className="text-sm text-gray-600">সাধারণ সম্পাদক</p>
             </div>
 
             <div className="text-center">
               <div className="bg-gray-200 w-24 h-24 rounded-full mx-auto mb-4"></div>
-              <h4 className="font-semibold text-navy-800">ফাতিমা খাতুন</h4>
+              <h4 className="font-semibold text-navy-800">মোহাম্মদ জসিম উদ্দিন</h4>
               <p className="text-sm text-gray-600">কোষাধ্যক্ষ</p>
             </div>
           </div>

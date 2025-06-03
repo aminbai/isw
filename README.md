@@ -1,6 +1,6 @@
 # ইসলামী সমাজকল্যাণ পরিষদ - Website
 
-A modern, responsive website for the Islamic Social Welfare Organization with Firebase integration.
+A modern, responsive website for the Islamic Social Welfare Organization with comprehensive Firebase integration for financial management.
 
 ## Firebase Setup
 
@@ -73,6 +73,48 @@ The application uses the following Firestore collections:
 }
 \`\`\`
 
+### `expenses` (NEW)
+\`\`\`
+{
+  category: string,
+  subcategory: string,
+  amount: number,
+  description: string,
+  approvedBy: string,
+  receiptNumber: string,
+  submittedAt: Timestamp,
+  status: 'pending' | 'approved' | 'rejected',
+  paymentMethod: string,
+  vendor: string
+}
+\`\`\`
+
+### `budgets` (NEW)
+\`\`\`
+{
+  category: string,
+  allocatedAmount: number,
+  spentAmount: number,
+  remainingAmount: number,
+  fiscalYear: string,
+  createdAt: Timestamp,
+  updatedAt: Timestamp
+}
+\`\`\`
+
+### `financialReports` (NEW)
+\`\`\`
+{
+  reportType: 'monthly' | 'quarterly' | 'yearly',
+  period: string,
+  totalIncome: number,
+  totalExpense: number,
+  netBalance: number,
+  generatedAt: Timestamp,
+  generatedBy: string
+}
+\`\`\`
+
 ## Security Rules
 
 Add these Firestore security rules:
@@ -96,6 +138,19 @@ service cloud.firestore {
       allow create: if true;
       allow read, update, delete: if request.auth != null;
     }
+    
+    // Financial management - Admin only
+    match /expenses/{document} {
+      allow read, write: if request.auth != null;
+    }
+    
+    match /budgets/{document} {
+      allow read, write: if request.auth != null;
+    }
+    
+    match /financialReports/{document} {
+      allow read, write: if request.auth != null;
+    }
   }
 }
 \`\`\`
@@ -114,8 +169,39 @@ service cloud.firestore {
 - ✅ Form submissions with error handling
 - ✅ Receipt generation
 - ✅ Data export functionality
+- ✅ **Financial Management System**
+- ✅ **Expense Tracking**
+- ✅ **Budget Management**
+- ✅ **Financial Reports**
+- ✅ **Real-time Financial Dashboard**
 - ✅ Responsive design
 - ✅ Islamic design aesthetics
+
+## Financial Management Features
+
+### 💰 **Expense Management**
+- Add new expenses with categories
+- Track payment methods and vendors
+- Receipt number management
+- Approval workflow
+
+### 📊 **Budget Planning**
+- Create budgets by category
+- Track allocated vs spent amounts
+- Visual progress indicators
+- Fiscal year management
+
+### 📈 **Financial Reports**
+- Monthly, quarterly, yearly reports
+- Income vs expense analysis
+- Net balance calculations
+- Export functionality
+
+### 🔄 **Real-time Updates**
+- Live financial data from Firebase
+- Automatic calculations
+- Instant dashboard updates
+- Transaction history
 
 ## Installation
 
@@ -127,48 +213,21 @@ npm run dev
 ## Environment Variables
 
 Make sure to set up your `.env.local` file with the Firebase configuration before running the application.
-\`\`\`
 
-I've successfully integrated Firebase Firestore database and authentication into your Islamic welfare organization website. Here's what has been implemented:
+## Usage
 
-## 🔥 **Firebase Integration Features:**
+1. **Public Forms**: Anyone can submit donations, admissions, and campaign joins
+2. **Admin Panel**: Requires authentication to access financial management
+3. **Financial Management**: 
+   - Add expenses and track spending
+   - Create and manage budgets
+   - Generate financial reports
+   - Export data for accounting
 
-### **Database Structure**
-- **Admissions Collection**: Stores membership applications with status tracking
-- **Campaign Joins Collection**: Manages campaign participation requests  
-- **Donations Collection**: Records all donations with verification status
-- **Timestamps**: All submissions include Firebase timestamps for accurate tracking
+## Demo Credentials
 
-### **Authentication System**
-- **Admin Login Page**: Secure email/password authentication
-- **Protected Admin Routes**: Only authenticated users can access admin panel
-- **Session Management**: Automatic login state management with hooks
-- **Logout Functionality**: Clean session termination
+For testing purposes:
+- **Email**: admin@islamicwelfare.org
+- **Password**: password123
 
-### **Real-time Data Management**
-- **Form Submissions**: All forms now save directly to Firestore
-- **Error Handling**: Comprehensive error messages in Bengali
-- **Loading States**: User-friendly loading indicators
-- **Success Confirmations**: Clear feedback after successful submissions
-
-### **Admin Dashboard Enhancements**
-- **Live Data**: Real-time fetching from Firestore collections
-- **Statistics**: Dynamic calculation of totals and counts
-- **Export Functionality**: Download reports with actual Firebase data
-- **Date Formatting**: Proper Bengali date formatting for timestamps
-
-### **Security Features**
-- **Protected Routes**: Admin panel requires authentication
-- **Input Validation**: Client-side and server-side validation
-- **Error Boundaries**: Graceful error handling throughout the app
-- **Secure Configuration**: Environment variables for Firebase config
-
-## 🚀 **Setup Instructions:**
-
-1. **Create Firebase Project** and enable Firestore + Authentication
-2. **Copy environment variables** from the `.env.example` file
-3. **Set up security rules** as provided in the README
-4. **Create admin account** in Firebase Authentication
-5. **Deploy and test** all form submissions
-
-The website now has a complete backend infrastructure with Firebase, making it production-ready for your Islamic social welfare organization!
+All financial data is stored in Firebase Firestore and can be viewed in real-time through the Firebase Console.

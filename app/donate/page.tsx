@@ -256,13 +256,13 @@ export default function DonatePage() {
               <h3 className="font-semibold text-navy-800 mb-2">পেমেন্ট তথ্য:</h3>
               <div className="text-sm text-gray-600 space-y-1">
                 <p>
-                  <strong>বিকাশ:</strong> ০১৭১২-৩৪৫৬৭৮ (Personal)
+                  <strong>বিকাশ:</strong> ০১৮৮১-২৩৬৭৬৭ (Personal)
                 </p>
                 <p>
-                  <strong>নগদ:</strong> ০১৭১২-৩৪৫৬৭৮
+                  <strong>নগদ:</strong> ০১৮৮১-২৩৬৭৬৭
                 </p>
                 <p>
-                  <strong>ব্যাংক:</strong> ইসলামী ব্যাংক, A/C: ১২৩৪৫৬৭৮৯০
+                  <strong>ব্যাংক:</strong> ইসলামী ব্যাংক, A/C: ২০৫০১২৩৪৫৬৭৮৯০
                 </p>
               </div>
             </div>
