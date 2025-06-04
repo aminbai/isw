@@ -149,7 +149,7 @@ export default function JoinCampaignPage() {
                 onChange={handleChange}
                 required
                 className="form-input"
-                placeholder="০১xxxxxxxxx"
+                placeholder="০১৭xxxxxxxx"
               />
             </div>
 

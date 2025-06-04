@@ -7,7 +7,7 @@ export function OrganizationInfo() {
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-navy-800 mb-4 font-amiri">আমাদের পরিচয়</h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            ইসলামী মূল্যবোধের ভিত্তিতে গড়ে ওঠা আমাদের হাছিরপাড়া সমাজের কল্যাণে কাজ করে যাচ্ছি।
+            ইসলামী মূল্যবোধের ভিত্তিতে গড়ে ওঠা আমাদের সংস্থা গ্রামীণ সমাজের কল্যাণে কাজ করে যাচ্ছে
           </p>
         </div>
 

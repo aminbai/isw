@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState } from "react"
 import { Heart, Phone, MapPin, CreditCard, Hash, Download } from "lucide-react"
-import { generateReceipt } from "@/lib/receipt-generator"
+import { generatePDFReceipt } from "@/lib/pdf-receipt-generator"
 import { submitDonationForm, generateDonationId } from "@/lib/firestore"
 
 export default function DonatePage() {
@@ -69,7 +69,7 @@ export default function DonatePage() {
 
   const handleDownloadReceipt = () => {
     if (receiptData) {
-      generateReceipt(receiptData)
+      generatePDFReceipt(receiptData)
     }
   }
 
@@ -110,7 +110,7 @@ export default function DonatePage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button onClick={handleDownloadReceipt} className="btn-primary flex items-center justify-center">
                 <Download className="h-4 w-4 mr-2" />
-                রসিদ ডাউনলোড করুন
+                সুন্দর রসিদ ডাউনলোড করুন
               </button>
               <button
                 onClick={() => {
@@ -256,13 +256,13 @@ export default function DonatePage() {
               <h3 className="font-semibold text-navy-800 mb-2">পেমেন্ট তথ্য:</h3>
               <div className="text-sm text-gray-600 space-y-1">
                 <p>
-                  <strong>বিকাশ:</strong> ০১৮৮১-২৩৬৭৬৭ (Personal)
+                  <strong>বিকাশ:</strong> ০১৭১২-৩৪৫৬৭৮ (Personal)
                 </p>
                 <p>
-                  <strong>নগদ:</strong> ০১৮৮১-২৩৬৭৬৭
+                  <strong>নগদ:</strong> ০১৭১২-৩৪৫৬৭৮
                 </p>
                 <p>
-                  <strong>ব্যাংক:</strong> ইসলামী ব্যাংক, A/C: ২০৫০১২৩৪৫৬৭৮৯০
+                  <strong>ব্যাংক:</strong> ইসলামী ব্যাংক, A/C: ১২৩৪৫৬৭৮৯০
                 </p>
               </div>
             </div>

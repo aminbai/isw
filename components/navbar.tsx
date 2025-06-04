@@ -14,7 +14,6 @@ export function Navbar() {
     { name: "ভর্তির আবেদন", href: "/admission" },
     { name: "ক্যাম্পেইনে যোগদান", href: "/join-campaign" },
     { name: "দান করুন", href: "/donate" },
-    { name: "আর্থিক ব্যবস্থাপনা", href: "/financial-management" },
     { name: "লগইন", href: "/login" },
   ]
 
@@ -27,7 +26,7 @@ export function Navbar() {
               <div className="bg-emerald-600 p-2 rounded-lg">
                 <Mosque className="h-6 w-6 text-white" />
               </div>
-              <div className="text-x1 font-bold text-navy-400 font-amiri"> হাছিরপাড়া ইসলামী সমাজকল্যাণ পরিষদ</div>
+              <div className="text-xl font-bold text-navy-800 font-amiri">ইসলামী সমাজকল্যাণ পরিষদ</div>
             </Link>
           </div>
 
