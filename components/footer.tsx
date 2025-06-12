@@ -10,10 +10,10 @@ export function Footer() {
               <div className="bg-emerald-600 p-2 rounded-lg">
                 <Mosque className="h-6 w-6 text-white" />
               </div>
-              <div className="text-xl font-bold font-amiri">ইসলামী সমাজকল্যাণ পরিষদ</div>
+              <div className="text-xl font-bold font-amiri">হাছিরপাড়া ইসলামী সমাজকল্যাণ পরিষদ</div>
             </div>
             <p className="text-gray-300 text-sm leading-relaxed">
-              আমাদের গ্রামীণ সমাজের কল্যাণে নিবেদিত একটি অরাজনৈতিক ও অলাভজনক সংস্থা। ইসলামী মূল্যবোধের ভিত্তিতে সমাজসেবায় আমরা
+              আমাদের হাছিরপাড়া সমাজের কল্যাণে নিবেদিত একটি অরাজনৈতিক ও অলাভজনক সংস্থা। ইসলামী মূল্যবোধের ভিত্তিতে সমাজসেবায় আমরা
               প্রতিশ্রুতিবদ্ধ।
             </p>
           </div>
@@ -31,7 +31,7 @@ export function Footer() {
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin className="h-4 w-4 text-emerald-400" />
-                <span className="text-sm">গ্রাম: আদর্শগ্রাম, উপজেলা: সদর, জেলা: ঢাকা</span>
+                <span className="text-sm">গ্রাম: সুখছড়ী হাছির পাড়া, উপজেলা: লোহাগাড়া, জেলা: চট্টগ্রাম</span>
               </div>
             </div>
           </div>

@@ -20,7 +20,7 @@ export default function JoinCampaignPage() {
   const campaigns = [
     { id: "1", name: "শীতবস্ত্র বিতরণ ক্যাম্পেইন" },
     { id: "2", name: "বিনামূল্যে চিকিৎসা সেবা" },
-    { id: "3", name: "শিক্ষ�� উপকরণ বিতরণ" },
+    { id: "3", name: "শিক্ষা উপকরণ বিতরণ" },
   ]
 
   const handleSubmit = async (e: React.FormEvent) => {

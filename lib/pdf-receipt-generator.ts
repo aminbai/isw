@@ -7,7 +7,7 @@ export function generatePDFReceipt(donationData: any) {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>দান রসিদ - ইসলামী সমাজকল্যাণ পরিষদ</title>
+        <title>দান রসিদ - হাছিরপাড়া ইসলামী সমাজকল্যাণ পরিষদ</title>
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap');
             
@@ -226,8 +226,8 @@ export function generatePDFReceipt(donationData: any) {
             
             <div class="receipt-header">
                 <div class="org-logo">🕌</div>
-                <div class="org-name">ইসলামী সমাজকল্যাণ পরিষদ</div>
-                <div class="org-subtitle">গ্রামীণ সমাজের উন্নয়নে নিবেদিত</div>
+                <div class="org-name">হাছিরপাড়া ইসলামী সমাজকল্যাণ পরিষদ</div>
+                <div class="org-subtitle">হাছিরপাড়ার ইসলামী সমাজ ও মানুষের কল্যাণে নিবেদিত</div>
             </div>
             
             <div class="receipt-title">দান রসিদ</div>
@@ -286,7 +286,7 @@ export function generatePDFReceipt(donationData: any) {
                 <div class="contact-info">
                     <strong>যোগাযোগ:</strong><br>
                     ফোন: +৮৮০ ১৭১২-৩৪৫৬৭৮ | ইমেইল: info@islamicwelfare.org<br>
-                    ঠিকানা: গ্রাম: আদর্শগ্রাম, উপজেলা: সদর, জেলা: ঢাকা
+                    ঠিকানা: গ্রাম: সুখছড়ী হাছিরপাড়া, উপজেলা: লোহাগাড়া, জেলা: চট্টগ্রাম
                 </div>
             </div>
         </div>
